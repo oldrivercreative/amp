@@ -1,10 +1,10 @@
 {
   "name": "amp-utils",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A collection of handy utilities.",
   "main": "src/amp.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,8 @@
   "devDependencies": {
     "eslint": "^4.8.0",
     "eslint-config-airbnb-base": "^12.0.2",
-    "eslint-plugin-import": "^2.7.0"
+    "eslint-plugin-import": "^2.7.0",
+    "mocha": "^4.0.1"
   },
   "dependencies": {}
 }

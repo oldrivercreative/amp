@@ -1,4 +1,9 @@
-module.exports = {
+/**
+ * amp
+ * A collection of handy utilities.
+ * https://github.com/oldrivercreative/amp
+ */
+const amp = {
   // Array utilities
   array: {
     /**
@@ -9,7 +14,9 @@ module.exports = {
      * @return {Array}
      */
     move(array, from, to) {
-      return array.splice(to, 0, array.splice(from, 1)[0]);
+      const el = array.splice(from, 1)[0];
+      array.splice(to, 0, el);
+      return array;
     },
 
     /**
@@ -36,7 +43,7 @@ module.exports = {
       let parent;
       while (el) {
         parent = el.parentElement;
-        if (parent && this.html.matches(parent, selector)) return parent;
+        if (parent && amp.html.matches(parent, selector)) return parent;
         el = parent;
       }
       return null;
@@ -64,12 +71,12 @@ module.exports = {
      */
     byPath(search, path, value) {
       const obj = search;
-      if (typeof path === 'string') return this.object.byPath(obj, path.split('.'), value);
+      if (typeof path === 'string') return amp.object.byPath(obj, path.split('.'), value);
       else if (path.length === 1 && value !== undefined) {
         obj[path[0]] = value;
         return obj;
       } else if (path.length === 0) return obj;
-      return this.object.byPath(obj[path[0]], path.slice(1), value);
+      return amp.object.byPath(obj[path[0]], path.slice(1), value);
     },
 
     /**
@@ -109,18 +116,18 @@ module.exports = {
     merge(target, ...sources) {
       if (!sources.length) return target;
       const source = sources.shift();
-      if (this.object.is(target) && this.object.is(source)) {
+      if (amp.object.is(target) && amp.object.is(source)) {
         // eslint-disable-next-line no-restricted-syntax
         for (const key in source) {
-          if (this.object.is(source[key])) {
+          if (amp.object.is(source[key])) {
             if (!target[key]) Object.assign(target, { [key]: {} });
-            this.object.merge(target[key], source[key]);
+            amp.object.merge(target[key], source[key]);
           } else {
             Object.assign(target, { [key]: source[key] });
           }
         }
       }
-      return this.object.merge(target, ...sources);
+      return amp.object.merge(target, ...sources);
     },
 
     /**
@@ -130,12 +137,12 @@ module.exports = {
      * @return {Object}
      */
     options(defaultConfig = {}, config = {}) {
-      return this.object.merge({}, defaultConfig, config);
+      return amp.object.merge({}, defaultConfig, config);
     },
   },
 
   // Options (synonym)
-  options: this.object.options,
+  options: (defaultConfig = {}, config = {}) => amp.object.options(defaultConfig, config),
 
   // Query string utilities
   queryString: {
@@ -205,3 +212,5 @@ module.exports = {
     },
   },
 };
+
+module.exports = amp;
