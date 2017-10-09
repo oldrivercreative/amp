@@ -13,7 +13,7 @@ module.exports = {
     },
 
     /**
-     * Get unique items from given array
+     * Get unique items from an array
      * @param  {Array} arr
      * @return {Array}
      */
@@ -23,20 +23,20 @@ module.exports = {
     },
   },
 
-  // DOM utilities
-  dom: {
+  // HTML utilities
+  html: {
     /**
-     * Closest DOM parent by CSS selector
+     * Get the closest matching DOM parent by CSS selector
      * @param  {Object} start - DOM element from which to start search
      * @param  {String} selector - CSS selector
-     * @return {Object}
+     * @return {HTMLElement}
      */
     closest(start, selector) {
       let el = start;
       let parent;
       while (el) {
         parent = el.parentElement;
-        if (parent && this.dom.matches(parent, selector)) return parent;
+        if (parent && this.html.matches(parent, selector)) return parent;
         el = parent;
       }
       return null;
@@ -53,21 +53,10 @@ module.exports = {
     },
   },
 
-  // Environment utilities
-  env: {
-    /**
-     * Is application in development mode?
-     * @return {Boolean}
-     */
-    dev() {
-      return process.env.NODE_ENV === 'development';
-    },
-  },
-
   // Object utilities
   object: {
     /**
-     * Get object by string path
+     * Get or set object value by key path
      * @param  {Object} search - Object to search
      * @param  {String} path - Search key path ('parent.child.grandchild')
      * @param  {Object} value - Set target object to this value instead of getting value
@@ -76,9 +65,10 @@ module.exports = {
     byPath(search, path, value) {
       const obj = search;
       if (typeof path === 'string') return this.object.byPath(obj, path.split('.'), value);
-      // eslint-disable-next-line no-return-assign
-      else if (path.length === 1 && value !== undefined) return obj[path[0]] = value;
-      else if (path.length === 0) return obj;
+      else if (path.length === 1 && value !== undefined) {
+        obj[path[0]] = value;
+        return obj;
+      } else if (path.length === 0) return obj;
       return this.object.byPath(obj[path[0]], path.slice(1), value);
     },
 
@@ -92,7 +82,7 @@ module.exports = {
     },
 
     /**
-     * Compare objects for equality
+     * Compare two objects for equality
      * @param  {Object}  a
      * @param  {Object}  b
      * @return {Boolean}
@@ -111,7 +101,7 @@ module.exports = {
     },
 
     /**
-     * Deep merge objects
+     * Deep merge two or more objects
      * @param  {Object} target - Properties will be copied into this object
      * @param  {Object} sources - One or more objects to merge into the target
      * @return {Object}
@@ -134,7 +124,7 @@ module.exports = {
     },
 
     /**
-     * Build configuration object with default values
+     * Build a configuration object with default values
      * @param  {Object} defaultConfig
      * @param  {Object} config
      * @return {Object}
@@ -144,19 +134,22 @@ module.exports = {
     },
   },
 
+  // Options (synonym)
+  options: this.object.options,
+
   // Query string utilities
   queryString: {
     /**
-     * Parse query string URL for given parameter value
-     * @param  {String} name
-     * @param  {String} url
+     * Parse query string for given parameter value
+     * @param  {String} uri
+     * @param  {String} key
      * @return {String}
      */
-    parse(name, url) {
+    get(uri, key) {
       // eslint-disable-next-line no-useless-escape
-      const param = name.replace(/[\[\]]/g, '\\$&');
+      const param = key.replace(/[\[\]]/g, '\\$&');
       const regex = new RegExp(`[?&]${param}(=([^&#]*)|&|#|$)`);
-      const results = regex.exec(url);
+      const results = regex.exec(uri);
       if (!results) return null;
       if (!results[2]) return '';
       return decodeURIComponent(results[2].replace(/\+/g, ' '));
@@ -169,40 +162,11 @@ module.exports = {
      * @param  {String} value
      * @return {String}
      */
-    update(uri, key, value) {
+    set(uri, key, value) {
       const re = new RegExp(`([?&])${key}=.*?(&|$)`, 'i');
       const separator = uri.indexOf('?') !== -1 ? '&' : '?';
       if (uri.match(re)) return uri.replace(re, `$1${key}=${value}$2`);
       return `${uri}${separator}${key}=${value}`;
-    },
-  },
-
-  // Sort utilities
-  sort: {
-    /**
-     * Naturally sort strings with numbers ([1, 10, 2, 20] => [1, 2, 10, 20])
-     * @param  {String}  a
-     * @param  {String}  b
-     * @return {Integer}
-     */
-    natural(a, b) {
-      if (a.indexOf('1/2 ') === 0) return -1;
-      else if (b.indexOf('1/2 ') === 0) return 1;
-      const ax = [];
-      const bx = [];
-      a.replace(/(\d+)|(\D+)/g, (_, $1, $2) => {
-        ax.push([$1 || Infinity, $2 || '']);
-      });
-      b.replace(/(\d+)|(\D+)/g, (_, $1, $2) => {
-        bx.push([$1 || Infinity, $2 || '']);
-      });
-      while (ax.length && bx.length) {
-        const an = ax.shift();
-        const bn = bx.shift();
-        const nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
-        if (nn) return nn;
-      }
-      return ax.length - bx.length;
     },
   },
 
@@ -223,7 +187,7 @@ module.exports = {
     },
 
     /**
-     * Return title case of string
+     * Transform a string to title case
      * @param  {String} str
      * @return {String}
      */
@@ -232,7 +196,7 @@ module.exports = {
     },
 
     /**
-     * Trim slashes on path
+     * Trim slashes from a string or path
      * @param  {String} path
      * @return {String}
      */

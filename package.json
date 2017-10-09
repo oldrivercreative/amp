@@ -1,6 +1,6 @@
 {
-  "name": "amp",
-  "version": "1.0.0",
+  "name": "amp-utils",
+  "version": "1.0.1",
   "description": "A collection of handy utilities.",
   "main": "src/amp.js",
   "scripts": {
