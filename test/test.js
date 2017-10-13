@@ -84,6 +84,11 @@ describe('queryString', () => {
 });
 
 describe('string', () => {
+  describe('guid()', () => {
+    it('should return guid string', () => {
+      assert.ok(amp.string.guid());
+    });
+  });
   describe('slug()', () => {
     it('should return slugged string', () => {
       assert.equal('pomp-circumstance', amp.string.slug('Pomp & Circumstance'));

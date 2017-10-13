@@ -225,6 +225,15 @@ amp.queryString.set(url, 'age', '3'); // '?name=Edmund&type=cat&age=3'
 
 
 ## String Utilities
+### `amp.string.guid()`
+Generate a globally unique identifier (GUID) string. Returns `String`.
+
+#### Examples
+```js
+amp.string.guid(); // '5aac52a7-d431-aecc-8d35-ef18bf1cbb85'
+amp.string.guid(); // 'f2295534-89e3-50cd-18d7-120c62311ac7'
+```
+
 ### `amp.string.slug(str)`
 Slugify the given string. Returns `String`.
 
